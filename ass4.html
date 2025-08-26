@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive To-Do List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Static Ocean Background & Centering */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .todo-container {
+      max-width: 500px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85); /* semi-transparent so background is visible */
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .todo-title {
+      font-weight: bold;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #000000;
+    }
+
+    .list-group-item {
+      border-radius: 12px !important;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .list-group-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+      opacity: 0.6;
+    }
+
+    .btn-sm {
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .btn-sm:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="todo-container">
+    <h2 class="todo-title">✨ My To-Do List ✨</h2>
+
+    <!-- Input Section -->
+    <div class="input-group mb-3">
+      <input type="text" id="taskInput" class="form-control rounded-start-pill" placeholder="Enter a new task">
+      <button class="btn btn-primary rounded-end-pill" id="addTaskBtn">Add</button>
+    </div>
+
+    <!-- Task List -->
+    <div id="taskList" class="list-group"></div>
+  </div>
+
+  <script>
+    const addTaskBtn = document.getElementById("addTaskBtn");
+    const taskInput = document.getElementById("taskInput");
+    const taskList = document.getElementById("taskList");
+
+    function createTask(taskText) {
+      const taskItem = document.createElement("div");
+      taskItem.className = "list-group-item d-flex justify-content-between align-items-center";
+
+      taskItem.innerHTML = `
+        <span class="task-text">${taskText}</span>
+        <div>
+          <button class="btn btn-success btn-sm me-2 complete-btn">✔️</button>
+          <button class="btn btn-danger btn-sm delete-btn">✖️</button>
+        </div>
+      `;
+
+      taskList.appendChild(taskItem);
+
+      // Complete Task
+      taskItem.querySelector(".complete-btn").addEventListener("click", () => {
+        taskItem.querySelector(".task-text").classList.toggle("completed");
+      });
+
+      // Delete Task
+      taskItem.querySelector(".delete-btn").addEventListener("click", () => {
+        taskItem.classList.add("animate__animated", "animate__fadeOutRight");
+        setTimeout(() => taskList.removeChild(taskItem), 500);
+      });
+    }
+
+    // Add Task Button
+    addTaskBtn.addEventListener("click", () => {
+      const taskText = taskInput.value.trim();
+      if (taskText === "") return;
+      createTask(taskText);
+      taskInput.value = "";
+    });
+
+    // Add Task with Enter Key
+    taskInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        addTaskBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
